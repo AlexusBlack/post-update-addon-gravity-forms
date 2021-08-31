@@ -15,7 +15,7 @@ services:
       volumes:
         - type: bind
           source: ./svn/trunk/
-          target: /var/www/html/wp-content/plugins/acf-feeds-for-gravity-forms
+          target: /var/www/html/wp-content/plugins/post-update-addon-gravity-forms
   mysql:
       container_name: gfacff_mysql
       image: mysql:5.7

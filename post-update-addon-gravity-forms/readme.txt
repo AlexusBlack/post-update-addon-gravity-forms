@@ -1,6 +1,6 @@
-=== ACF Feeds for Gravity Forms ===
+=== Post Update Add-On - Gravity Forms ===
 Contributors: alexusblack
-Tags: acf, advanced custom fields, gravity forms, feed, integration, form, entry
+Tags: gravity forms, form, post, update, edit, post update, post edit
 Requires at least: 5.4.0
 Tested up to: 5.8.0
 Stable tag: 1.0.1
@@ -8,7 +8,7 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Write Gravity Forms submission fields into ACF fields. Accumulate values over time.
+Update/Edit a post or a custom post type with Gravity Forms.
 
 == Description ==
 
