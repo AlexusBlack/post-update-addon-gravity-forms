@@ -14,7 +14,7 @@ services:
       working_dir: /var/www/html
       volumes:
         - type: bind
-          source: ./svn/trunk/
+          source: ./post-update-addon-gravity-forms
           target: /var/www/html/wp-content/plugins/post-update-addon-gravity-forms
   mysql:
       container_name: gfacff_mysql
