@@ -1,11 +1,11 @@
 <?php
 GFForms::include_feed_addon_framework();
  
-class PostUpdateAddOn extends GFFeedAddOn {
-      protected $_version = GF_POST_UPDATE_ADDON_VERSION;
+class ACGF_PostUpdateAddOn extends GFFeedAddOn {
+      protected $_version = ACGF_POST_UPDATE_ADDON_VERSION;
       // Earlier versions maybe supported but not tested
       protected $_min_gravityforms_version = '2.5';
-      protected $_slug = 'gf_update_post';
+      protected $_slug = 'acgf_update_post';
       protected $_path = 'post-update-addon-gravity-forms/post-update-addon-gravity-forms.php';
       protected $_full_path = __FILE__;
       protected $_title = 'Post Update Add-On';
@@ -15,7 +15,7 @@ class PostUpdateAddOn extends GFFeedAddOn {
                    
       public static function get_instance() {
         if(self::$_instance == null) {
-          self::$_instance = new PostUpdateAddOn();
+          self::$_instance = new ACGF_PostUpdateAddOn();
         }
         return self::$_instance;
       }

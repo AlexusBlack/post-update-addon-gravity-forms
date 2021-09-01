@@ -6,21 +6,21 @@ Version: 1.0.0
 Author: Alex Chernov
 Author URI: https://alexchernov.com
 */
-define('GF_POST_UPDATE_ADDON_VERSION', '1.0.0');
+define('ACGF_POST_UPDATE_ADDON_VERSION', '1.0.0');
 
-add_action('gform_loaded', array('PostUpdate_AddOn_Bootstrap', 'load'), 5);
+add_action('gform_loaded', array('ACGF_PostUpdate_AddOn_Bootstrap', 'load'), 5);
  
-class PostUpdate_AddOn_Bootstrap {
+class ACGF_PostUpdate_AddOn_Bootstrap {
   public static function load() {
     // Check if Gravity Forms installed
     if(!method_exists('GFForms', 'include_addon_framework')) return;
     // Include primary class
     require_once('class-post-update-addon.php');
-    GFAddOn::register('PostUpdateAddOn');
+    GFAddOn::register('ACGF_PostUpdateAddOn');
   }
 }
  
-function gf_post_update_addon() {
-      return PostUpdateAddOn::get_instance();
+function acgf_post_update_addon() {
+  return ACGF_PostUpdateAddOn::get_instance();
 }
 ?>
