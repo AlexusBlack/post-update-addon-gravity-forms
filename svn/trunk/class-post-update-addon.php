@@ -36,13 +36,19 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
                 'required' => true,
                 'class' => 'medium',
               ),
+            ),
+          ),
+
+          array(
+            'title'  => __('Target Post Settings', $this->_slug),
+            'description' => __('Enter Post ID, custom post ID or a merge tag that contains such id. Use {current_post_id} to update page with submitted form.', $this->_slug),
+            'fields' => array(
               array(
                 'name' => 'post_id',
                 'label' => __('Post ID', $this->_slug),
                 'type' => 'text',
                 'required' => true,
                 'class' => 'medium merge-tag-support mt-position-right',
-                'tooltip' => __('Post ID, custom post ID or a merge tag that contains such id', $this->_slug)
               ),
             ),
           ),
@@ -142,13 +148,24 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
 
       public function process_feed($feed, $entry, $form) {
         $this->log_debug(__METHOD__ . '(): Start feed processing');
+
         $raw_post_id = rgars($feed, 'meta/post_id');
         $raw_post_id = trim($raw_post_id);
+
+        // get current post id
+        $current_post_id = get_the_ID();
+        if($current_post_id !== false) {
+          $raw_post_id = str_replace('{current_post_id}', $current_post_id, $raw_post_id);
+        }
+
+        // replacing merge tags
         $raw_post_id = GFCommon::replace_variables($raw_post_id, $form, $entry, false, false, false);
         if($raw_post_id == '') {
           $this->log_debug(__METHOD__ . sprintf('(): After processing merge tags Post ID is an empty string. Cancelling feed processing.'));
           return;
         }
+
+
         $post_id = intval($raw_post_id);
 
         $this->log_debug(__METHOD__ . sprintf('(): Provided Post ID "%d"', $post_id));
