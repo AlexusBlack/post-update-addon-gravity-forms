@@ -3,11 +3,10 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
   public function feed_settings_fields() {
     return array(
       array(
-        'title'  => __('Post Update Settings', $this->_slug),
         'fields' => array(
           array(
             'name' => 'feedName',
-            'label' => __('Name', $this->_slug),
+            'label' => __('Feed Name', $this->_slug),
             'type' => 'text',
             'required' => true,
             'class' => 'medium',
@@ -75,6 +74,22 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
       ),
 
       array(
+        'title' => __('Taxonomies', $this->_slug),
+        'fields' => array(
+          array(
+            'label' => __('Categories', $this->_slug),
+            'name' => 'category_tax_settings',
+            'type' => 'custom_taxonomy_field_type',
+          ),
+          array(
+            'label' => __('Tags', $this->_slug),
+            'name' => 'post_tag_tax_settings',
+            'type' => 'custom_taxonomy_field_type',
+          ),
+        )
+      ),
+
+      array(
         'title' => __('Post Content', $this->_slug),
         'description' => __('Empty value means - no change', $this->_slug),
         'fields' => array(
@@ -110,27 +125,12 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
         'fields' => array(
           array(
             'name' => 'meta_field_map',
-            'label' => __('Custom Fields', $this->_slug),
+            //'label' => __('Custom Fields', $this->_slug),
             'type' => 'dynamic_field_map',
           ),
         )
       ),
 
-      array(
-        'title' => __('Taxonomies', $this->_slug),
-        'fields' => array(
-          array(
-            'label' => __('Categories', $this->_slug),
-            'name' => 'category_tax_settings',
-            'type' => 'custom_taxonomy_field_type',
-          ),
-          array(
-            'label' => __('Tags', $this->_slug),
-            'name' => 'post_tag_tax_settings',
-            'type' => 'custom_taxonomy_field_type',
-          ),
-        )
-      ),
 
       array(
         'fields' => array(
