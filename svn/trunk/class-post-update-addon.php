@@ -73,6 +73,10 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     // Updating standard post fields
     $this->process_standard_post_fields($postarr);
 
+    // Updating taxonomies
+    $this->process_taxonomy($feed, $entry, 'category', $post_id);
+    $this->process_taxonomy($feed, $entry, 'post_tag', $post_id);
+
     // Updating meta fields
     $this->process_meta_fields($feed, $entry, $post_id);
   }
@@ -93,6 +97,18 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
       $form_field_value = rgar($entry, $source_field_id);
       update_post_meta($post_id, $target_meta_key, $form_field_value);
     }
+  }
+
+  function process_taxonomy($feed, $entry, $taxonomy_name, $post_id) {
+    $tax_field_id = rgars($feed, 'meta/' . $taxonomy_name . '_tax_settings_field');
+    // Checking if the field configured
+    if($tax_field_id === '') return;
+
+    $tax_mode = rgars($feed, 'meta/' . $taxonomy_name . '_tax_settings_mode');
+    $new_tax_value = trim(rgar($entry, $tax_field_id));
+    if($new_tax_value === '' && $tax_mode === 'override_not_empty') return;
+
+    wp_set_object_terms($post_id, explode(',', $new_tax_value), $taxonomy_name, $tax_mode === 'append');
   }
 
   function prepare_author_id($feed, $entry, $form, &$postarr) {

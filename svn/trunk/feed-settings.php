@@ -117,6 +117,22 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
       ),
 
       array(
+        'title' => __('Taxonomies', $this->_slug),
+        'fields' => array(
+          array(
+            'label' => __('Categories', $this->_slug),
+            'name' => 'category_tax_settings',
+            'type' => 'custom_taxonomy_field_type',
+          ),
+          array(
+            'label' => __('Tags', $this->_slug),
+            'name' => 'post_tag_tax_settings',
+            'type' => 'custom_taxonomy_field_type',
+          ),
+        )
+      ),
+
+      array(
         'fields' => array(
           array(
             'name'  => 'feed_condition',
@@ -127,6 +143,33 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
       ),
       
     );
+  }
+
+  public function settings_custom_taxonomy_field_type($settings) {
+    //var_dump($settings);
+    $this->settings_field_select(array(
+      'label' => __('Field', $this->_slug),
+      'name' => $settings['name'] . '_field'
+    ));
+
+    $this->settings_select(array(
+      'label' => __('Mode', $this->_slug),
+      'name' => $settings['name'] . '_mode',
+      'choices' => array(
+        array(
+          'label' => __('Override if not empty', $this->_slug),
+          'value' => 'override_not_empty'
+        ),
+        array(
+          'label' => __('Override always', $this->_slug),
+          'value' => 'override_always'
+        ),
+        array(
+          'label' => __('Append', $this->_slug),
+          'value' => 'append'
+        ),
+      )
+    ));
   }
 }
 ?>
