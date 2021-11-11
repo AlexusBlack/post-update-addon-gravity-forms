@@ -55,7 +55,7 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
           
           array(
             'title' => __('Post Settings', $this->_slug),
-            'tooltip' => __('Empty value means - no change', $this->_slug),
+            'description' => __('Empty value means - no change', $this->_slug),
             'fields' => array(
               array(
                 'name' => 'author_id',
@@ -100,7 +100,7 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
 
           array(
             'title' => __('Post Content', $this->_slug),
-            'tooltip' => __('Empty value means - no change', $this->_slug),
+            'description' => __('Empty value means - no change', $this->_slug),
             'fields' => array(
               array(
                 'name' => 'post_title',
@@ -115,10 +115,27 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
                 'class' => 'merge-tag-support mt-position-right',
               ),
               array(
+                'type' => 'checkbox',
+                'horizontal' => true,
+                'choices' => array(
+                  array(
+                    'label' => __('Allow empty value for content'),
+                    'name' => 'allow_empty_content',
+                    'value' => 1
+                  ),
+                )
+              ),
+            )
+          ),
+
+          array(
+            'title' => __('Custom Fields', $this->_slug),
+            'description' => __('Enter custom field name and then select form field with value for it', $this->_slug),
+            'fields' => array(
+              array(
                 'name' => 'meta_field_map',
                 'label' => __('Custom Fields', $this->_slug),
                 'type' => 'dynamic_field_map',
-                'tooltip' => __('Enter custom field name and then select for field with value for it', $this->_slug)
               ),
             )
           ),
@@ -201,7 +218,8 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
         $post_content = rgars($feed, 'meta/post_content');
         $post_content = trim($post_content);
         $post_content = GFCommon::replace_variables($post_content, $form, $entry, false, false, false);
-        if($post_content !== '') {
+        $allow_empty_content = rgars($feed, 'meta/allow_empty_content');
+        if($allow_empty_content === '1' || $post_content !== '') {
           $postarr['post_content'] = $post_content;
           $this->log_debug(__METHOD__ . sprintf('(): Provided Post Content "%s"', $post_content));
         }
