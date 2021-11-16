@@ -110,8 +110,30 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
             'horizontal' => true,
             'choices' => array(
               array(
-                'label' => __('Allow empty value for content'),
+                'label' => __('Allow empty value for content', $this->_slug),
                 'name' => 'allow_empty_content',
+                'value' => 1
+              ),
+            )
+          ),
+        )
+      ),
+
+      array(
+        'title' => __('Featured Image', $this->_slug),
+        'fields' => array(
+          array(
+            'name' => 'featured_image_field',
+            'label' => __('Select a form field', $this->_slug),
+            'type' => 'field_select'
+          ),
+          array(
+            'type' => 'checkbox',
+            'horizontal' => true,
+            'choices' => array(
+              array(
+                'label' => __('Delete featured image if no value passed', $this->_slug),
+                'name' => 'allow_empty_featured_image',
                 'value' => 1
               ),
             )

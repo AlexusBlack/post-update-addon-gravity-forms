@@ -72,6 +72,7 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
 
     // Updating standard post fields
     $this->process_standard_post_fields($postarr);
+    $this->process_featured_image($feed, $entry, $post_id);
 
     // Updating taxonomies
     $this->process_taxonomy($feed, $entry, 'category', $post_id);
@@ -87,6 +88,50 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     if(is_wp_error($result)) {
       $this->log_debug(__METHOD__ . sprintf('(): ERROR: Can\'t update the post - "%s"', $result->get_error_message()));
       return;
+    }
+  }
+
+  function process_featured_image($feed, $entry, $post_id) {
+    $this->log_debug(__METHOD__ . sprintf('(): Starting featured image update'));
+    $featured_image_field_id = rgars($feed, 'meta/featured_image_field');
+    $featured_image_allow_empty = rgars($feed, 'meta/allow_empty_featured_image');
+    //var_dump($featured_image_allow_empty);
+    if($featured_image_field_id === '') return;
+    
+    $new_featured_image = rgar($entry, $featured_image_field_id);
+    //var_dump($new_featured_image); 
+    if($new_featured_image === '') {
+      if($featured_image_allow_empty !== '1') return;
+      delete_post_thumbnail($post_id);
+      return;
+    }
+    $file = str_replace(get_site_url() . '/', ABSPATH, $new_featured_image);
+    //var_dump($file);
+    $filename = basename($file);
+    //var_dump($filename);
+
+    $upload_file = wp_upload_bits($filename, null, file_get_contents($file));
+    if(!$upload_file['error']) {
+      $wp_filetype = wp_check_filetype($filename, null );
+      $attachment = array(
+        'post_mime_type' => $wp_filetype['type'],
+        'post_parent' => $post_id,
+        'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+        'post_content' => '',
+        'post_status' => 'inherit'
+      );
+
+      $attachment_id = wp_insert_attachment($attachment, $upload_file['file'], $post_id);
+      if(!is_wp_error($attachment_id)) {
+        $this->log_debug(__METHOD__ . sprintf('(): New featured image id: %d', $attachment_id));
+        require_once(ABSPATH . 'wp-admin' . '/includes/image.php');
+        $attachment_data = wp_generate_attachment_metadata($attachment_id, $upload_file['file']);
+        wp_update_attachment_metadata($attachment_id, $attachment_data);
+
+        set_post_thumbnail($post_id, $attachment_id);
+      }
+    } else {
+      $this->log_debug(__METHOD__ . '(): Can\'t add new featured image: ' . $upload_file['error']);
     }
   }
 
