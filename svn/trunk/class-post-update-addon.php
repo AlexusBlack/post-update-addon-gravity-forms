@@ -137,9 +137,11 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
 
   function process_meta_fields($feed, $entry, $post_id) {
     $this->log_debug(__METHOD__ . sprintf('(): Starting meta fields (custom fields) update'));
+    $update_non_empty_meta_fields_only = rgars($feed, 'meta/update_non_empty_meta_fields') === '1';
     $metaMap = $this->get_dynamic_field_map_fields($feed, 'meta_field_map');
     foreach($metaMap as $target_meta_key => $source_field_id) {
       $form_field_value = rgar($entry, $source_field_id);
+      if($update_non_empty_meta_fields_only && $form_field_value === '') continue;
       update_post_meta($post_id, $target_meta_key, $form_field_value);
     }
   }

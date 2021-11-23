@@ -150,6 +150,17 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
             //'label' => __('Custom Fields', $this->_slug),
             'type' => 'dynamic_field_map',
           ),
+          array(
+            'type' => 'checkbox',
+            'horizontal' => true,
+            'choices' => array(
+              array(
+                'label' => __('Update only non-empty fields', $this->_slug),
+                'name' => 'update_non_empty_meta_fields',
+                'value' => 1
+              ),
+            )
+          ),
         )
       ),
 
