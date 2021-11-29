@@ -3,7 +3,7 @@ Contributors: alexusblack
 Tags: gravity forms, post update, update post, post edit, edit post, change post, post change
 Requires at least: 5.4.0
 Tested up to: 5.8.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,27 +18,24 @@ How to use:
 
 - In form settings open "Post Update"
 - Press "Add New"
-- (Required) Configure "Post ID" manually, from merge tag or use current page/post id
-- Configure new Author ID
-- Configure new Post Status
-- Configure Featured Image
+- (Required) Configure "Post ID" (number, insert merge tag or current page/post id)
+- Configure Post Settings (Author ID, Post Status)
 - Configure Tags & Categories
-- Configure Post title and desctiption manually or insert merge tags
-- Leave any of above empty to avoid changes
-- Configure your custom fields
-- Configure conditional logic
+- Configure Post Title and Content manually or insert merge tags
+- Configure Featured Image
+- Configure Custom fields
+- Configure Conditional logic
 - Press "Save Settings"
 
 Features:
 
-* Update "Post Author"
-* Update "Post Status"
-* Update "Post Title"
-* Update "Post Content"
-* Update "Featured Image"
+* Update Author and Status
+* Update "Post Title" and "Post Content"
 * Update "Tags" and "Categories"
+* Update "Featured Image"
 * Update "Post Custom Fields"
-* Merge tags support
+* Optional update if the field is empty
+* Combine values with merge tags
 * Conditional logic support
 
 == Installation ==
@@ -51,6 +48,13 @@ Features:
 1. User Interface
 
 == Changelog ==
+
+= 1.1.2 =
+- Support for checkboxes and similar fields
+- Featured image update bugfix
+
+= 1.1.1 =
+- Update only non-empty fields option
 
 = 1.1.0 =
 - Current post target feature
