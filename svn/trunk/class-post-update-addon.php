@@ -105,12 +105,13 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
       delete_post_thumbnail($post_id);
       return;
     }
-    $file = str_replace(get_site_url() . '/', ABSPATH, $new_featured_image);
-    //var_dump($file);
-    $filename = basename($file);
-    //var_dump($filename);
+    $upload_path = GFFormsModel::get_upload_path($entry['form_id']);
+    $upload_url = GFFormsModel::get_upload_url($entry['form_id']);
+    $file_path = str_replace($upload_url, $upload_path, $new_featured_image);
 
-    $upload_file = wp_upload_bits($filename, null, file_get_contents($file));
+    $filename = basename($file_path);
+
+    $upload_file = wp_upload_bits($filename, null, file_get_contents($file_path));
     if(!$upload_file['error']) {
       $wp_filetype = wp_check_filetype($filename, null );
       $attachment = array(
