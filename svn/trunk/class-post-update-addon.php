@@ -140,7 +140,19 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     $update_non_empty_meta_fields_only = rgars($feed, 'meta/update_non_empty_meta_fields') === '1';
     $metaMap = $this->get_dynamic_field_map_fields($feed, 'meta_field_map');
     foreach($metaMap as $target_meta_key => $source_field_id) {
-      $form_field_value = rgar($entry, $source_field_id);
+      $form_field_value = '';
+      if(array_key_exists($source_field_id . '.1', $entry)) {
+        // this is composite GF value, checkbox or similar
+        $form_field_value = array();
+        foreach($entry as $key => $value) {
+          if($value === '') continue; // non empty values
+          if(strpos($key, $source_field_id . '.') !== 0) continue; // that belong to our field
+          array_push($form_field_value, rgar($entry, $key));
+        }
+      } else {
+        // this is just a plain value
+        $form_field_value = rgar($entry, $source_field_id);
+      }
       if($update_non_empty_meta_fields_only && $form_field_value === '') continue;
       update_post_meta($post_id, $target_meta_key, $form_field_value);
     }
