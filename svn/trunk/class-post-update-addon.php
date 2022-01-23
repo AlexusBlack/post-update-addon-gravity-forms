@@ -77,6 +77,7 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     // Updating taxonomies
     $this->process_taxonomy($feed, $entry, 'category', $post_id);
     $this->process_taxonomy($feed, $entry, 'post_tag', $post_id);
+    $this->process_custom_taxonomies($feed, $entry, $post_id);
 
     // Updating meta fields
     $this->process_meta_fields($feed, $entry, $post_id);
@@ -169,6 +170,17 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     if($new_tax_value === '' && $tax_mode === 'override_not_empty') return;
 
     wp_set_object_terms($post_id, explode(',', $new_tax_value), $taxonomy_name, $tax_mode === 'append');
+  }
+
+  function process_custom_taxonomies($feed, $entry, $post_id) {
+    $tax_map = $this->get_dynamic_field_map_fields($feed, 'custom_tax_settings');
+    $tax_mode = rgars($feed, 'meta/custom_tax_override_mode');
+
+    foreach($tax_map as $tax_slug => $tax_field_id) {
+      $new_tax_value = trim(rgar($entry, $tax_field_id));
+      if($new_tax_value === '' && $tax_mode === 'override_not_empty') continue;
+      wp_set_object_terms($post_id, explode(',', $new_tax_value), $tax_slug, $tax_mode === 'append');
+    }
   }
 
   function prepare_author_id($feed, $entry, $form, &$postarr) {

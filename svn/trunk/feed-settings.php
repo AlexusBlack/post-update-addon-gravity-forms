@@ -86,6 +86,41 @@ trait ACGF_PostUpdateAddOn_FeedSettings {
             'name' => 'post_tag_tax_settings',
             'type' => 'custom_taxonomy_field_type',
           ),
+          array(
+            'label' => __('Custom Taxonomies', $this->_slug),
+            'name' => 'custom_tax_settings',
+            'type' => 'dynamic_field_map',
+            'field_map' => (function() {
+              $tax = get_taxonomies(array(), 'objects');
+              $tax = array_map(function($i) {
+                return array(
+                  'label' => $i->label,
+                  'value' => $i->name
+                );
+              }, $tax);
+              //var_dump($tax);
+              return $tax;
+            })()
+          ),
+          array(
+            'label' => __(' Custom Taxonomies Override Mode', $this->_slug),
+            'name' => 'custom_tax_override_mode',
+            'type' => 'select',
+            'choices' => array(
+              array(
+                'label' => __('Override if not empty', $this->_slug),
+                'value' => 'override_not_empty'
+              ),
+              array(
+                'label' => __('Override always', $this->_slug),
+                'value' => 'override_always'
+              ),
+              array(
+                'label' => __('Append', $this->_slug),
+                'value' => 'append'
+              ),
+            )
+          )
         )
       ),
 
