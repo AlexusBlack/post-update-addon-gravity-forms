@@ -142,6 +142,14 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     $update_non_empty_meta_fields_only = rgars($feed, 'meta/update_non_empty_meta_fields') === '1';
     $metaMap = $this->get_dynamic_field_map_fields($feed, 'meta_field_map');
     foreach($metaMap as $target_meta_key => $source_field_id) {
+      // target meta key can contain "type" like <post_id>, extracting it
+      if(strpos($target_meta_key, '<') !== false) {
+        $target_meta_key_name = substr($target_meta_key, 0, strpos($target_meta_key, '<'));
+        $target_meta_key_type = substr($target_meta_key, strpos($target_meta_key, '<') + 1, -1);
+      } else {
+        $target_meta_key_name = $target_meta_key;
+        $target_meta_key_type = 'string';
+      }
       $form_field_value = '';
       if(array_key_exists($source_field_id . '.1', $entry)) {
         // this is composite GF value, checkbox or similar
@@ -154,9 +162,16 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
       } else {
         // this is just a plain value
         $form_field_value = rgar($entry, $source_field_id);
+        // type matching
+        if($target_meta_key_type === 'post_id' && !is_numeric($form_field_value)) {
+          if(filter_var($form_field_value, FILTER_VALIDATE_URL) !== false) {
+            $attachment_id = attachment_url_to_postid($form_field_value);
+            if($attachment_id) $form_field_value = $attachment_id;
+          }
+        }
       }
       if($update_non_empty_meta_fields_only && $form_field_value === '') continue;
-      update_post_meta($post_id, $target_meta_key, $form_field_value);
+      update_post_meta($post_id, $target_meta_key_name, $form_field_value);
     }
   }
 
