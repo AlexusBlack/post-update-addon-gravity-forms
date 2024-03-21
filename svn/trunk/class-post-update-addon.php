@@ -187,14 +187,31 @@ class ACGF_PostUpdateAddOn extends GFFeedAddOn {
     wp_set_object_terms($post_id, explode(',', $new_tax_value), $taxonomy_name, $tax_mode === 'append');
   }
 
+  // Modifed to handle single value or array of values
   function process_custom_taxonomies($feed, $entry, $post_id) {
-    $tax_map = $this->get_dynamic_field_map_fields($feed, 'custom_tax_settings');
-    $tax_mode = rgars($feed, 'meta/custom_tax_override_mode');
+    $custom_taxonomies = rgars($feed, 'meta/custom_tax_settings');
 
-    foreach($tax_map as $tax_slug => $tax_field_id) {
-      $new_tax_value = trim(rgar($entry, $tax_field_id));
-      if($new_tax_value === '' && $tax_mode === 'override_not_empty') continue;
-      wp_set_object_terms($post_id, explode(',', $new_tax_value), $tax_slug, $tax_mode === 'append');
+    foreach ($custom_taxonomies as $taxonomy_setting) {
+        $taxonomy = $taxonomy_setting['key'];
+        $field_id_base = $taxonomy_setting['value']; // Base ID for the field
+
+        // Check if the base field ID directly exists in the entry (for single value fields like text inputs)
+        if (isset($entry[$field_id_base]) && !empty($entry[$field_id_base])) {
+            $term_ids_or_slugs = [$entry[$field_id_base]]; // Treat the value as an array with a single element
+        } else {
+            // Collect all checked values for this taxonomy (for checkbox fields)
+            $term_ids_or_slugs = [];
+            foreach ($entry as $key => $value) {
+                if (strpos($key, $field_id_base . '.') === 0 && !empty($value)) { // Check if key starts with the base field ID
+                    $term_ids_or_slugs[] = $value;
+                }
+            }
+        }
+
+        // Set terms if any values were provided
+        if (!empty($term_ids_or_slugs)) {
+            wp_set_object_terms($post_id, $term_ids_or_slugs, $taxonomy, false); // false to overwrite existing terms
+        }
     }
   }
 
